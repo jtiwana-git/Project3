@@ -24,7 +24,6 @@ const app = express();
 app.use((req, res, next) => {
   // Send cookes to the client
   res.header("Access-Control-Allow-Origin", true);
-  req.header("Type-Content", "application/json");
 
   // Allow the client to send cookies to the server
   next();
