@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.cjs",
-    "nodemon": "nodemon server.cjs"
+    "start": "node server.js",
+    "nodemon": "nodemon server.js"
   },
   "type": "module",
   "keywords": [],

@@ -25,7 +25,7 @@ export const register = (req, res) => {
     const queryNewUser =
       "INSERT INTO users (username, email, password, name) VALUES (?)";
 
-    //   values to be inserted
+    //   values for the query
     const values = [
       req.body.username,
       req.body.email,
@@ -61,7 +61,7 @@ export const login = (req, res) => {
     const token = jwt.sign({ id: data[0].id }, "SECRET");
 
     // Hide password but show other data
-    const { password, ...other } = data[0];
+    const { password, ...others } = data[0];
 
     // Send token in cookie
     res
@@ -69,7 +69,7 @@ export const login = (req, res) => {
         httpOnly: true,
       })
       .status(200)
-      .json(other);
+      .json(others);
   });
 };
 
