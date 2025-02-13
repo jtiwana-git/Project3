@@ -5,10 +5,16 @@
     Author: Jagdeep Tiwana
  */
 
+// Importing express
 import express from "express";
+
+// Importing the auth controller
 import { login, register, logout } from "../controllers/auth.js";
 
+// Creating the router
 const router = express.Router();
+
+// Routers the auth routes
 
 // Register
 router.post("/register", register);

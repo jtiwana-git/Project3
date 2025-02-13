@@ -10,3 +10,9 @@ different screen sizes. The interface should be user-friendly, with a consistent
 • Back End: Your app needs to have a working back end which deals with all route requests and works with the database. Interaction with APIs (if an API is used) and the database should be done in a secure way. There should be an ability for user log in or account creation, and user credentials should be stored in a secure way.
 
 • Documentation: You need to have written documentation/report for your project. This is an amalgamation for of documentation and a learner report. This will demonstrate your thinking and justifications for your web app, its implementations and features.
+
+### Content page
+
+1. [Introduction / Requirements](#project-3)
+2. [Server side documentation](./server/Documentation_server.md)
+3. [Client side Documentation](./client/Documentation_client.md)

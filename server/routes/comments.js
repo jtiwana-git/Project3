@@ -5,7 +5,9 @@
     Author: Jagdeep Tiwana
  */
 
+// Importing express
 import express from "express";
+// Importing comment controller
 import {
   getComments,
   addComment,
@@ -13,12 +15,16 @@ import {
   deleteComment,
 } from "../controllers/comment.js";
 
+// Creating express router
 const router = express.Router();
 
-// Find post by ID
+// Find all comments
 router.get("/", getComments);
+// Add comment
 router.post("/", addComment);
+// Delete comment by the api route (id)
 router.delete("/:id", deleteComment);
+// Update comment by id by the api route (id)
 router.put("/:id", updateComment);
 
 export default router;

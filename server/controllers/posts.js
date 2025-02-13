@@ -10,6 +10,7 @@
 import { database } from "../connect.js";
 import jwt from "jsonwebtoken";
 
+// Get all posts
 export const getPosts = (req, res) => {
   // Get user id
   const userId = req.query.userId;
@@ -20,13 +21,7 @@ export const getPosts = (req, res) => {
 
   jwt.verify(token, "SECRET", (error, userInfo) => {
     if (error) return res.status(403).json("Invalid token!");
-
-    /* SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS
-    u ON (u.id = p.userId) LEFT JOIN relationships AS r ON (r.userId = r.followingUserID) WHERE r.followerUserId= ? OR p.userId =? ORDER BY p.createdAt DESC;
-     */
-    // const queryAllPosts =
-    //   "SELECT p.id, p.postDescription, p.userId, u.name, u.profilePic FROM posts p JOIN users u ON u.id=p.userId";
-
+    // Query to get all posts. if userId is provided then get all posts of that user or else get all posts
     const queryAllPosts = userId
       ? "SELECT p.id, p.postDescription, p.userId, u.name, u.profilePic FROM posts p JOIN users u ON u.id=p.userId WHERE p.userId = ?"
       : "SELECT p.id, p.postDescription, p.userId, u.name, u.profilePic FROM posts p JOIN users u ON u.id=p.userId ";
@@ -49,15 +44,11 @@ export const addPost = (req, res) => {
   // Acess to post from token
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Not logged in!");
-
   jwt.verify(token, "SECRET", (error, userInfo) => {
     if (error) return res.status(403).json("Invalid token!");
-
     const queryCreatePost =
       "INSERT INTO posts (postDescription, imgPost, userId) VALUES (?)";
-
     const values = [req.body.postDescription, req.body.imgPost, userInfo.id];
-
     database.query(queryCreatePost, [values], (error, data) => {
       if (error) {
         res.status(500).json(error);
@@ -69,10 +60,12 @@ export const addPost = (req, res) => {
 };
 
 export const deletePost = (req, res) => {
-  // Acess to post from token
+  // Access to post from token
   const token = req.cookies.accessToken;
+  // If token is not provided then return 401 status - Not logged in
   if (!token) return res.status(401).json("Not logged in!");
 
+  // Verify the token and if token is invalid then return 403 status - Invalid token
   jwt.verify(token, "SECRET", (error, userInfo) => {
     if (error) return res.status(403).json("Invalid token!");
 
@@ -83,8 +76,10 @@ export const deletePost = (req, res) => {
       [req.params.id, userInfo.id],
       (error, data) => {
         if (error) returnres.status(500).json(error);
+        // If affectedRows is greater than 0 then return 200 status - Post has been deleted
         if (data.affectedRows > 0)
           return res.status(200).json("Post has been deleted!");
+        // if userId is not equal to userInfo.id then return 403 status - You can delete only your post
         return res.status(403).json("You can delete only your post!");
       }
     );
@@ -112,7 +107,9 @@ export const updatePost = (req, res) => {
     ];
 
     database.query(queryUpdatePost, values, (error, data) => {
+      // If error then return 500 status - error
       if (error) return res.status(500).json(error);
+
       if (data.affectedRows > 0)
         return res.status(200).json("Post has been updated!");
       return res.status(403).json("You can update only your post!");
