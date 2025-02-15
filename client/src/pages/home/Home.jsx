@@ -1,10 +1,11 @@
 import React from "react";
+import Posts from "../../components/posts/Posts.jsx";
+import "./home.scss";
 
 const Home = () => {
   return (
-    <div>
-      <h1>Home</h1>
-      <p>Welcome to the home page</p>
+    <div className="home">
+      <Posts />
     </div>
   );
 };
