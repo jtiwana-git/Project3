@@ -1,33 +1,34 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./login.scss";
 import "./LoginValidation";
 import { Link, useNavigate } from "react-router";
-import axios from "axios";
+import { AuthContext } from "../../context/authContext";
+import Home from "../home/Home.jsx";
 
 const Login = () => {
+  const { login } = useContext(AuthContext);
+
   const [values, setValues] = useState({
     username: "",
     password: "",
   });
 
+  const [err, setErr] = useState(null);
+
   const navigate = useNavigate();
-  const [errors, setErrors] = useState({});
 
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     console.log(values);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newUser = axios
-        .post("http://localhost:3001/api/auth/login", values)
-        .then((res) => console.log(res));
-      navigate("/");
-      return newUser;
-    } catch (error) {
-      console.log(error);
+      await login(values);
+      navigate("/home");
+    } catch (err) {
+      setErr(err.response.data);
     }
   };
 

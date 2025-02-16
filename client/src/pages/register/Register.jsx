@@ -13,21 +13,21 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const [errors, setErrors] = useState({});
+  const [err, setErr] = useState(null);
 
   const handleInput = (e) => {
     setValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const newUser = axios
+      const newUser = await axios
         .post("http://localhost:3001/api/auth/register", values)
         .then((res) => console.log(res));
       navigate("/login");
       return newUser;
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      setErr(err);
     }
   };
 
@@ -61,7 +61,7 @@ const Register = () => {
               name="name"
               onChange={handleInput}
             />
-            {/* {error && error} */}
+            {err && <span style={{ color: "red" }}>Something went wrong</span>}
             <button type="submit">Register</button>
           </form>
         </div>

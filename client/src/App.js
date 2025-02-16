@@ -1,13 +1,12 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
   createBrowserRouter,
   RouterProvider,
   Outlet,
   Navigate,
 } from "react-router";
+import { AuthContextProvider } from "./context/authContext.js";
 import Navbar from "./components/navbar/Navbar.jsx";
 import Home from "./pages/home/Home.jsx";
 import Login from "./pages/login/Login.jsx";
@@ -16,7 +15,7 @@ import Profile from "./pages/profile/Profile.jsx";
 import "./App.scss";
 
 function App() {
-  const currentUser = true;
+  const currentUser = false;
 
   const Layout = () => {
     return (
@@ -30,8 +29,8 @@ function App() {
   // ProtectedRoute component - only logged in users can access
 
   const ProtectedRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/login" />;
+    if (currentUser) {
+      return <Navigate to="/" />;
     }
     return children;
   };
@@ -46,7 +45,7 @@ function App() {
       ),
       children: [
         {
-          path: "/",
+          path: "/home",
           element: <Home />,
         },
         {
@@ -66,7 +65,9 @@ function App() {
   ]);
   return (
     <div>
-      <RouterProvider router={router} />
+      <AuthContextProvider>
+        <RouterProvider router={router} />
+      </AuthContextProvider>
     </div>
   );
 }
