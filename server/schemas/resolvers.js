@@ -12,7 +12,7 @@ const resolvers = {
     },
     posts: async (parent, { username }) => {
       const params = username ? { username } : {};
-      return Thought.find(params).sort({ createdAt: -1 });
+      return Post.find(params).sort({ createdAt: -1 });
     },
     post: async (parent, { postId }) => {
       return Post.findOne({ _id: postId });
@@ -98,10 +98,10 @@ const resolvers = {
       }
       throw new AuthenticationError("You need to be logged in!");
     },
-    removeComment: async (parent, { postId, commentId }, context) => {
+    removeComment: async (parent, { commentId }, context) => {
       if (context.user) {
         return Post.findOneAndUpdate(
-          { _id: postId },
+          { id: commentId },
           {
             $pull: {
               comments: {
@@ -110,6 +110,57 @@ const resolvers = {
               },
             },
           },
+          { new: true }
+        );
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    updatePost: async (parent, { postId, postText }, context) => {
+      if (context.user) {
+        return Post.findOneAndUpdate(
+          { _id: postId },
+          { postText },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+      }
+      throw new AuthenticationError("You need to be logged in!");
+    },
+    updateComment: async (
+      parent,
+      { username, commentId, commentText, commentAuthor },
+      context
+    ) => {
+      const user = context.user;
+      console.log(user);
+      const id = commentId;
+      console.log(id);
+
+      if (!commentAuthor === user) {
+        throw new AuthenticationError("Not your comment to update!");
+      } else {
+        return Post.findOneAndUpdate(
+          { id },
+          {
+            comments: { commentText, commentAuthor: context.user.username },
+          },
+          {
+            new: true,
+            runValidators: true,
+          }
+        );
+      }
+    },
+    updateUser: async (
+      parent,
+      { id, username, profilePic, coverPic, website }
+    ) => {
+      if (context.user) {
+        return User.findOneAndUpdate(
+          { _id: id },
+          { username, profilePic, coverPic, website },
           { new: true }
         );
       }
