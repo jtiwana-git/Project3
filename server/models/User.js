@@ -28,10 +28,10 @@ const userSchema = new Schema({
   website: {
     type: String,
   },
-  thoughts: [
+  posts: [
     {
       type: Schema.Types.ObjectId,
-      ref: "Thought",
+      ref: "Post",
     },
   ],
 });
